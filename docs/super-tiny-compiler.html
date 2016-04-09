@@ -1,0 +1,1846 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>super-tiny-compiler.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>super-tiny-compiler.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/**
+ * TTTTTTTTTTTTTTTTTTTTTTTHHHHHHHHH     HHHHHHHHHEEEEEEEEEEEEEEEEEEEEEE
+ * T:::::::::::::::::::::TH:::::::H     H:::::::HE::::::::::::::::::::E
+ * T:::::::::::::::::::::TH:::::::H     H:::::::HE::::::::::::::::::::E
+ * T:::::TT:::::::TT:::::THH::::::H     H::::::HHEE::::::EEEEEEEEE::::E
+ * TTTTTT  T:::::T  TTTTTT  H:::::H     H:::::H    E:::::E       EEEEEE
+ *         T:::::T          H:::::H     H:::::H    E:::::E
+ *         T:::::T          H::::::HHHHH::::::H    E::::::EEEEEEEEEE
+ *         T:::::T          H:::::::::::::::::H    E:::::::::::::::E
+ *         T:::::T          H:::::::::::::::::H    E:::::::::::::::E
+ *         T:::::T          H::::::HHHHH::::::H    E::::::EEEEEEEEEE
+ *         T:::::T          H:::::H     H:::::H    E:::::E
+ *         T:::::T          H:::::H     H:::::H    E:::::E       EEEEEE
+ *       TT:::::::TT      HH::::::H     H::::::HHEE::::::EEEEEEEE:::::E
+ *       T:::::::::T      H:::::::H     H:::::::HE::::::::::::::::::::E
+ *       T:::::::::T      H:::::::H     H:::::::HE::::::::::::::::::::E
+ *       TTTTTTTTTTT      HHHHHHHHH     HHHHHHHHHEEEEEEEEEEEEEEEEEEEEEE
+ *
+ *    SSSSSSSSSSSSSSS UUUUUUUU     UUUUUUUUPPPPPPPPPPPPPPPPP   EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR
+ *  SS:::::::::::::::SU::::::U     U::::::UP::::::::::::::::P  E::::::::::::::::::::ER::::::::::::::::R
+ * S:::::SSSSSS::::::SU::::::U     U::::::UP::::::PPPPPP:::::P E::::::::::::::::::::ER::::::RRRRRR:::::R
+ * S:::::S     SSSSSSSUU:::::U     U:::::UUPP:::::P     P:::::PEE::::::EEEEEEEEE::::ERR:::::R     R:::::R
+ * S:::::S             U:::::U     U:::::U   P::::P     P:::::P  E:::::E       EEEEEE  R::::R     R:::::R
+ * S:::::S             U:::::U     U:::::U   P::::P     P:::::P  E:::::E               R::::R     R:::::R
+ *  S::::SSSS          U:::::U     U:::::U   P::::PPPPPP:::::P   E::::::EEEEEEEEEE     R::::RRRRRR:::::R
+ *   SS::::::SSSSS     U:::::U     U:::::U   P:::::::::::::PP    E:::::::::::::::E     R:::::::::::::RR
+ *     SSS::::::::SS   U:::::U     U:::::U   P::::PPPPPPPPP      E:::::::::::::::E     R::::RRRRRR:::::R
+ *        SSSSSS::::S  U:::::U     U:::::U   P::::P              E::::::EEEEEEEEEE     R::::R     R:::::R
+ *             S:::::S U:::::U     U:::::U   P::::P              E:::::E               R::::R     R:::::R
+ *             S:::::S U::::::U   U::::::U   P::::P              E:::::E       EEEEEE  R::::R     R:::::R
+ * SSSSSSS     S:::::S U:::::::UUU:::::::U PP::::::PP          EE::::::EEEEEEEE:::::ERR:::::R     R:::::R
+ * S::::::SSSSSS:::::S  UU:::::::::::::UU  P::::::::P          E::::::::::::::::::::ER::::::R     R:::::R
+ * S:::::::::::::::SS     UU:::::::::UU    P::::::::P          E::::::::::::::::::::ER::::::R     R:::::R
+ *  SSSSSSSSSSSSSSS         UUUUUUUUU      PPPPPPPPPP          EEEEEEEEEEEEEEEEEEEEEERRRRRRRR     RRRRRRR
+ *
+ * TTTTTTTTTTTTTTTTTTTTTTTIIIIIIIIIINNNNNNNN        NNNNNNNNYYYYYYY       YYYYYYY
+ * T:::::::::::::::::::::TI::::::::IN:::::::N       N::::::NY:::::Y       Y:::::Y
+ * T:::::::::::::::::::::TI::::::::IN::::::::N      N::::::NY:::::Y       Y:::::Y
+ * T:::::TT:::::::TT:::::TII::::::IIN:::::::::N     N::::::NY::::::Y     Y::::::Y
+ * TTTTTT  T:::::T  TTTTTT  I::::I  N::::::::::N    N::::::NYYY:::::Y   Y:::::YYY
+ *         T:::::T          I::::I  N:::::::::::N   N::::::N   Y:::::Y Y:::::Y
+ *         T:::::T          I::::I  N:::::::N::::N  N::::::N    Y:::::Y:::::Y
+ *         T:::::T          I::::I  N::::::N N::::N N::::::N     Y:::::::::Y
+ *         T:::::T          I::::I  N::::::N  N::::N:::::::N      Y:::::::Y
+ *         T:::::T          I::::I  N::::::N   N:::::::::::N       Y:::::Y
+ *         T:::::T          I::::I  N::::::N    N::::::::::N       Y:::::Y
+ *         T:::::T          I::::I  N::::::N     N:::::::::N       Y:::::Y
+ *       TT:::::::TT      II::::::IIN::::::N      N::::::::N       Y:::::Y
+ *       T:::::::::T      I::::::::IN::::::N       N:::::::N    YYYY:::::YYYY
+ *       T:::::::::T      I::::::::IN::::::N        N::::::N    Y:::::::::::Y
+ *       TTTTTTTTTTT      IIIIIIIIIINNNNNNNN         NNNNNNN    YYYYYYYYYYYYY
+ *
+ *         CCCCCCCCCCCCC     OOOOOOOOO     MMMMMMMM               MMMMMMMMPPPPPPPPPPPPPPPPP   IIIIIIIIIILLLLLLLLLLL             EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR
+ *      CCC::::::::::::C   OO:::::::::OO   M:::::::M             M:::::::MP::::::::::::::::P  I::::::::IL:::::::::L             E::::::::::::::::::::ER::::::::::::::::R
+ *    CC:::::::::::::::C OO:::::::::::::OO M::::::::M           M::::::::MP::::::PPPPPP:::::P I::::::::IL:::::::::L             E::::::::::::::::::::ER::::::RRRRRR:::::R
+ *   C:::::CCCCCCCC::::CO:::::::OOO:::::::OM:::::::::M         M:::::::::MPP:::::P     P:::::PII::::::IILL:::::::LL             EE::::::EEEEEEEEE::::ERR:::::R     R:::::R
+ *  C:::::C       CCCCCCO::::::O   O::::::OM::::::::::M       M::::::::::M  P::::P     P:::::P  I::::I    L:::::L                 E:::::E       EEEEEE  R::::R     R:::::R
+ * C:::::C              O:::::O     O:::::OM:::::::::::M     M:::::::::::M  P::::P     P:::::P  I::::I    L:::::L                 E:::::E               R::::R     R:::::R
+ * C:::::C              O:::::O     O:::::OM:::::::M::::M   M::::M:::::::M  P::::PPPPPP:::::P   I::::I    L:::::L                 E::::::EEEEEEEEEE     R::::RRRRRR:::::R
+ * C:::::C              O:::::O     O:::::OM::::::M M::::M M::::M M::::::M  P:::::::::::::PP    I::::I    L:::::L                 E:::::::::::::::E     R:::::::::::::RR
+ * C:::::C              O:::::O     O:::::OM::::::M  M::::M::::M  M::::::M  P::::PPPPPPPPP      I::::I    L:::::L                 E:::::::::::::::E     R::::RRRRRR:::::R
+ * C:::::C              O:::::O     O:::::OM::::::M   M:::::::M   M::::::M  P::::P              I::::I    L:::::L                 E::::::EEEEEEEEEE     R::::R     R:::::R
+ * C:::::C              O:::::O     O:::::OM::::::M    M:::::M    M::::::M  P::::P              I::::I    L:::::L                 E:::::E               R::::R     R:::::R
+ *  C:::::C       CCCCCCO::::::O   O::::::OM::::::M     MMMMM     M::::::M  P::::P              I::::I    L:::::L         LLLLLL  E:::::E       EEEEEE  R::::R     R:::::R
+ *   C:::::CCCCCCCC::::CO:::::::OOO:::::::OM::::::M               M::::::MPP::::::PP          II::::::IILL:::::::LLLLLLLLL:::::LEE::::::EEEEEEEE:::::ERR:::::R     R:::::R
+ *    CC:::::::::::::::C OO:::::::::::::OO M::::::M               M::::::MP::::::::P          I::::::::IL::::::::::::::::::::::LE::::::::::::::::::::ER::::::R     R:::::R
+ *      CCC::::::::::::C   OO:::::::::OO   M::::::M               M::::::MP::::::::P          I::::::::IL::::::::::::::::::::::LE::::::::::::::::::::ER::::::R     R:::::R
+ *         CCCCCCCCCCCCC     OOOOOOOOO     MMMMMMMM               MMMMMMMMPPPPPPPPPP          IIIIIIIIIILLLLLLLLLLLLLLLLLLLLLLLLEEEEEEEEEEEEEEEEEEEEEERRRRRRRR     RRRRRRR
+ *
+ * =======================================================================================================================================================================
+ * =======================================================================================================================================================================
+ * =======================================================================================================================================================================
+ * =======================================================================================================================================================================
+ */</span>
+
+<span class="hljs-comment">/**
+ * Today we're going to write a compiler together. But not just any compiler... A
+ * super duper teeny tiny compiler! A compiler that is so small that if you
+ * remove all the comments this file would only be ~200 lines of actual code.
+ *
+ * We're going to compile some lisp-like function calls into some C-like
+ * function calls.
+ *
+ * If you are not familiar with one or the other. I'll just give you a quick intro.
+ *
+ * If we had two functions `add` and `subtract` they would be written like this:
+ *
+ *                  LISP                      C
+ *
+ *   2 + 2          (add 2 2)                 add(2, 2)
+ *   4 - 2          (subtract 4 2)            subtract(4, 2)
+ *   2 + (4 - 2)    (add 2 (subtract 4 2))    add(2, subtract(4, 2))
+ *
+ * Easy peezy right?
+ *
+ * Well good, because this is exactly what we are going to compile. While this
+ * is neither a complete LISP or C syntax, it will be enough of the syntax to
+ * demonstrate many of the major pieces of a modern compiler.
+ */</span>
+
+<span class="hljs-comment">/**
+ * Most compilers break down into three primary stages: Parsing, Transformation,
+ * and Code Generation
+ *
+ * 1. *Parsing* is taking raw code and turning it into a more abstract
+ *    representation of the code.
+ *
+ * 2. *Transformation* takes this abstract representation and manipulates to do
+ *    whatever the compiler wants it to.
+ *
+ * 3. *Code Generation* takes the transformed representation of the code and
+ *    turns it into new code.
+ */</span>
+
+<span class="hljs-comment">/**
+ * Parsing
+ * -------
+ *
+ * Parsing typically gets broken down into two phases: Lexical Analysis and
+ * Syntactic Analysis.
+ *
+ * 1. *Lexical Analysis* takes the raw code and splits it apart into these things
+ *    called tokens by a thing called a tokenizer (or lexer).
+ *
+ *    Tokens are an array of tiny little objects that describe an isolated piece
+ *    of the syntax. They could be numbers, labels, punctuation, operators,
+ *    whatever.
+ *
+ * 2. *Syntactic Analysis* takes the tokens and reformats them into a
+ *    representation that describes each part of the syntax and their relation
+ *    to one another. This is known as an intermediate representation or
+ *    Abstract Syntax Tree.
+ *
+ *    An Abstract Syntax Tree, or AST for short, is a deeply nested object that
+ *    represents code in a way that is both easy to work with and tells us a lot
+ *    of information.
+ *
+ * For the following syntax:
+ *
+ *   (add 2 (subtract 4 2))
+ *
+ * Tokens might look something like this:
+ *
+ *   [
+ *     { type: 'paren',  value: '('        },
+ *     { type: 'name',   value: 'add'      },
+ *     { type: 'number', value: '2'        },
+ *     { type: 'paren',  value: '('        },
+ *     { type: 'name',   value: 'subtract' },
+ *     { type: 'number', value: '4'        },
+ *     { type: 'number', value: '2'        },
+ *     { type: 'paren',  value: ')'        },
+ *     { type: 'paren',  value: ')'        }
+ *   ]
+ *
+ * And an Abstract Syntax Tree (AST) might look like this:
+ *
+ *   {
+ *     type: 'Program',
+ *     body: [{
+ *       type: 'CallExpression',
+ *       name: 'add',
+ *       params: [{
+ *         type: 'NumberLiteral',
+ *         value: '2'
+ *       }, {
+ *         type: 'CallExpression',
+ *         name: 'subtract',
+ *         params: [{
+ *           type: 'NumberLiteral',
+ *           value: '4'
+ *         }, {
+ *           type: 'NumberLiteral',
+ *           value: '2'
+ *         }]
+ *       }]
+ *     }]
+ *   }
+ */</span>
+
+<span class="hljs-comment">/**
+ * Transformation
+ * --------------
+ *
+ * The next type of stage for a compiler is transformation. Again, this just
+ * takes the AST from the last step and makes changes to it. It can manipulate
+ * the AST in the same language or it can translate it into an entirely new
+ * language.
+ *
+ * Let’s look at how we would transform an AST.
+ *
+ * You might notice that our AST has elements within it that look very similar.
+ * There are these objects with a type property. Each of these are known as an
+ * AST Node. These nodes have defined properties on them that describe one
+ * isolated part of the tree.
+ *
+ * We can have a node for a "NumberLiteral":
+ *
+ *   {
+ *     type: 'NumberLiteral',
+ *     value: '2'
+ *   }
+ *
+ * Or maybe a node for a "CallExpression":
+ *
+ *   {
+ *     type: 'CallExpression',
+ *     name: 'subtract',
+ *     params: [...nested nodes go here...]
+ *   }
+ *
+ * When transforming the AST we can manipulate nodes by
+ * adding/removing/replacing properties, we can add new nodes, remove nodes, or
+ * we could leave the existing AST alone and create an entirely new one based
+ * on it.
+ *
+ * Since we’re targeting a new language, we’re going to focus on creating an
+ * entirely new AST that is specific to the target language.
+ *
+ * Traversal
+ * ---------
+ *
+ * In order to navigate through all of these nodes, we need to be able to
+ * traverse through them. This traversal process goes to each node in the AST
+ * depth-first.
+ *
+ *   {
+ *     type: 'Program',
+ *     body: [{
+ *       type: 'CallExpression',
+ *       name: 'add',
+ *       params: [{
+ *         type: 'NumberLiteral',
+ *         value: '2'
+ *       }, {
+ *         type: 'CallExpression',
+ *         name: 'subtract',
+ *         params: [{
+ *           type: 'NumberLiteral',
+ *           value: '4'
+ *         }, {
+ *           type: 'NumberLiteral',
+ *           value: '2'
+ *         }]
+ *       }]
+ *     }]
+ *   }
+ *
+ * So for the above AST we would go:
+ *
+ *   1. Program - Starting at the top level of the AST
+ *   2. CallExpression (add) - Moving to the first element of the Program's body
+ *   3. NumberLiteral (2) - Moving to the first element of CallExpression's params
+ *   4. CallExpression (subtract) - Moving to the second element of CallExpression's params
+ *   5. NumberLiteral (4) - Moving to the first element of CallExpression's params
+ *   6. NumberLiteral (2) - Moving to the second element of CallExpression's params
+ *
+ * If we were manipulating this AST directly, instead of creating a separate AST,
+ * we would likely introduce all sorts of abstractions here. But just visiting
+ * each node in the tree is enough.
+ *
+ * The reason I use the word “visiting” is because there is this pattern of how
+ * to represent operations on elements of an object structure.
+ *
+ * Visitors
+ * --------
+ *
+ * The basic idea here is that we are going to create a “visitor” object that
+ * has methods that will accept different node types.
+ *
+ *   var visitor = {
+ *     NumberLiteral() {},
+ *     CallExpression() {}
+ *   };
+ *
+ * When we traverse our AST we will call the methods on this visitor whenever we
+ * encounter a node of a matching type.
+ *
+ * In order to make this useful we will also pass the node and a reference to
+ * the parent node.
+ *
+ *   var visitor = {
+ *     NumberLiteral(node, parent) {},
+ *     CallExpression(node, parent) {}
+ *   };
+ */</span>
+
+<span class="hljs-comment">/**
+ * Code Generation
+ * ---------------
+ *
+ * The final phase of a compiler is code generation. Sometimes compilers will do
+ * things that overlap with transformation, but for the most part code
+ * generation just means take our AST and string-ify code back out.
+ *
+ * Code generators work several different ways, some compilers will reuse the
+ * tokens from earlier, others will have created a separate representation of
+ * the code so that they can print node linearly, but from what I can tell most
+ * will use the same AST we just created, which is what we’re going to focus on.
+ *
+ * Effectively our code generator will know how to “print” all of the different
+ * node types of the AST, and it will recursively call itself to print nested
+ * nodes until everything is printed into one long string of code.
+ */</span>
+
+<span class="hljs-comment">/**
+ * And that's it! That's all the different pieces of a compiler.
+ *
+ * Now that isn’t to say every compiler looks exactly like I described here.
+ * Compilers serve many different purposes, and they might need more steps than
+ * I have detailed.
+ *
+ * But now you should have a general high-level idea of what most compilers look
+ * like.
+ *
+ * Now that I’ve explained all of this, you’re all good to go write your own
+ * compilers right?
+ *
+ * Just kidding, that's what I'm here to help with :P
+ *
+ * So let's begin...
+ */</span>
+
+<span class="hljs-comment">/**
+ * ============================================================================
+ *                                   (/^▽^)/
+ *                                THE TOKENIZER!
+ * ============================================================================
+ */</span>
+
+<span class="hljs-comment">/**
+ * We're gonna start off with our first phase of parsing, lexical analysis, with
+ * the tokenizer.
+ *
+ * We're just going to take our string of code and break it down into an array
+ * of tokens.
+ *
+ *   (add 2 (subtract 4 2))   =&gt;   [{ type: 'paren', value: '(' }, ...]
+ */</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>We start by accepting an input string of code, and we’re gonna set up two
+things…</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">tokenizer</span>(<span class="hljs-params">input</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>A <code>current</code> variable for tracking our position in the code like a cursor.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> current = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>And a <code>tokens</code> array for pushing our tokens to.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> tokens = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>We start by creating a <code>while</code> loop where we are setting up our <code>current</code>
+variable to be incremented as much as we want <code>inside</code> the loop.</p>
+<p>We do this because we may want to increment <code>current</code> many times within a
+single loop because our tokens can be any length.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">while</span> (current &lt; input.length) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>We’re also going to store the <code>current</code> character in the <code>input</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> char = input[current];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>The first thing we want to check for is an open parenthesis. This will
+later be used for <code>CallExpressions</code> but for now we only care about the
+character.</p>
+<p>We check to see if we have an open parenthesis:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (char === <span class="hljs-string">'('</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>If we do, we push a new token with the type <code>paren</code> and set the value
+to an open parenthesis.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      tokens.push({
+        type: <span class="hljs-string">'paren'</span>,
+        value: <span class="hljs-string">'('</span>
+      });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Then we increment <code>current</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      current++;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>And we <code>continue</code> onto the next cycle of the loop.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">continue</span>;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Next we’re going to check for a closing parenthesis. We do the same exact
+thing as before: Check for a closing parenthesis, add a new token,
+increment <code>current</code>, and <code>continue</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (char === <span class="hljs-string">')'</span>) {
+      tokens.push({
+        type: <span class="hljs-string">'paren'</span>,
+        value: <span class="hljs-string">')'</span>
+      });
+      current++;
+      <span class="hljs-keyword">continue</span>;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Moving on, we’re now going to check for whitespace. This is interesting
+because we care that whitespace exists to separate characters, but it
+isn’t actually important for us to store as a token. We would only throw
+it out later.</p>
+<p>So here we’re just going to test for existence and if it does exist we’re
+going to just <code>continue</code> on.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> WHITESPACE = <span class="hljs-regexp">/\s/</span>;
+    <span class="hljs-keyword">if</span> (WHITESPACE.test(char)) {
+      current++;
+      <span class="hljs-keyword">continue</span>;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>The next type of token is a number. This is different than what we have
+seen before because a number could be any number of characters and we
+want to capture the entire sequence of characters as one token.</p>
+<p>  (add 123 456)
+       ^^^ ^^^
+       Only two separate tokens</p>
+<p>So we start this off when we encounter the first number in a sequence.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> NUMBERS = <span class="hljs-regexp">/[0-9]/</span>;
+    <span class="hljs-keyword">if</span> (NUMBERS.test(char)) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>We’re going to create a <code>value</code> string that we are going to push
+characters to.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> value = <span class="hljs-string">''</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Then we’re going to loop through each character in the sequence until
+we encounter a character that is not a number, pushing each character
+that is a number to our <code>value</code> and incrementing <code>current</code> as we go.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">while</span> (NUMBERS.test(char)) {
+        value += char;
+        char = input[++current];
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>After that we push our <code>number</code> token to the <code>tokens</code> array.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      tokens.push({
+        type: <span class="hljs-string">'number'</span>,
+        value: value
+      });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>And we continue on.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">continue</span>;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>The last type of token will be a <code>name</code> token. This is a sequence of
+letters instead of numbers, that are the names of functions in our lisp
+syntax.</p>
+<p>  (add 2 4)
+   ^^^
+   Name token</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> LETTERS = <span class="hljs-regexp">/[a-z]/i</span>;
+    <span class="hljs-keyword">if</span> (LETTERS.test(char)) {
+      <span class="hljs-keyword">var</span> value = <span class="hljs-string">''</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Again we’re just going to loop through all the letters pushing them to
+a value.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">while</span> (LETTERS.test(char)) {
+        value += char;
+        char = input[++current];
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>And pushing that value as a token with the type <code>name</code> and continuing.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      tokens.push({
+        type: <span class="hljs-string">'name'</span>,
+        value: value
+      });
+
+      <span class="hljs-keyword">continue</span>;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Finally if we have not matched a character by now, we’re going to throw
+an error and completely exit.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">'I dont know what this character is: '</span> + char);
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Then at the end of our <code>tokenizer</code> we simply return the tokens array.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span> tokens;
+}
+
+<span class="hljs-comment">/**
+ * ============================================================================
+ *                                 ヽ/❀o ل͜ o\ﾉ
+ *                                THE PARSER!!!
+ * ============================================================================
+ */</span>
+
+<span class="hljs-comment">/**
+ * For our parser we're going to take our array of tokens and turn it into an
+ * AST.
+ *
+ *   [{ type: 'paren', value: '(' }, ...]   =&gt;   { type: 'Program', body: [...] }
+ */</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Okay, so we define a <code>parser</code> function that accepts our array of <code>tokens</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">parser</span>(<span class="hljs-params">tokens</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Again we keep a <code>current</code> variable that we will use as a cursor.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> current = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>But this time we’re going to use recursion instead of a <code>while</code> loop. So we
+define a <code>walk</code> function.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">walk</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Inside the walk function we start by grabbing the <code>current</code> token.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> token = tokens[current];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>We’re going to split each type of token off into a different code path,
+starting off with <code>number</code> tokens.</p>
+<p>We test to see if we have a <code>number</code> token.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (token.type === <span class="hljs-string">'number'</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>If we have one, we’ll increment <code>current</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      current++;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>And we’ll return a new AST node called <code>NumberLiteral</code> and setting its
+value to the value of our token.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">return</span> {
+        type: <span class="hljs-string">'NumberLiteral'</span>,
+        value: token.value
+      };
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Next we’re going to look for CallExpressions. We start this off when we
+encounter an open parenthesis.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (
+      token.type === <span class="hljs-string">'paren'</span> &amp;&amp;
+      token.value === <span class="hljs-string">'('</span>
+    ) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>We’ll increment <code>current</code> to skip the parenthesis since we don’t care
+about it in our AST.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      token = tokens[++current];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>We create a base node with the type <code>CallExpression</code>, and we’re going
+to set the name as the current token’s value since the next token after
+the open parenthesis is the name of the function.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> node = {
+        type: <span class="hljs-string">'CallExpression'</span>,
+        name: token.value,
+        params: []
+      };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>We increment <code>current</code> <em>again</em> to skip the name token.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      token = tokens[++current];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>And now we want to loop through each token that will be the <code>params</code> of
+our <code>CallExpression</code> until we encounter a closing parenthesis.</p>
+<p>Now this is where recursion comes in. Instead of trying to parse a
+potentially infinitely nested set of nodes we’re going to rely on
+recursion to resolve things.</p>
+<p>To explain this, let’s take our Lisp code. You can see that the
+parameters of the <code>add</code> are a number and a nested <code>CallExpression</code> that
+includes its own numbers.</p>
+<p>  (add 2 (subtract 4 2))</p>
+<p>You’ll also notice that in our tokens array we have multiple closing
+parenthesis.</p>
+<p>  [
+    { type: ‘paren’,  value: ‘(‘        },
+    { type: ‘name’,   value: ‘add’      },
+    { type: ‘number’, value: ‘2’        },
+    { type: ‘paren’,  value: ‘(‘        },
+    { type: ‘name’,   value: ‘subtract’ },
+    { type: ‘number’, value: ‘4’        },
+    { type: ‘number’, value: ‘2’        },
+    { type: ‘paren’,  value: ‘)’        }, &lt;&lt;&lt; Closing parenthesis
+    { type: ‘paren’,  value: ‘)’        }  &lt;&lt;&lt; Closing parenthesis
+  ]</p>
+<p>We’re going to rely on the nested <code>walk</code> function to increment our
+<code>current</code> variable past any nested <code>CallExpressions</code>.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>So we create a <code>while</code> loop that will continue until it encounters a
+token with a <code>type</code> of <code>&#39;paren&#39;</code> and a <code>value</code> of a closing
+parenthesis.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">while</span> (
+        (token.type !== <span class="hljs-string">'paren'</span>) ||
+        (token.type === <span class="hljs-string">'paren'</span> &amp;&amp; token.value !== <span class="hljs-string">')'</span>)
+      ) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>we’ll call the <code>walk</code> function which will return a <code>node</code> and we’ll
+push it into our <code>node.params</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        node.params.push(walk());
+        token = tokens[current];
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>Finally we will increment <code>current</code> one last time to skip the closing
+parenthesis.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      current++;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>And return the node.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">return</span> node;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>Again, if we haven’t recognized the token type by now we’re going to
+throw an error.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(token.type);
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>Now, we’re going to create our AST which will have a root which is a
+<code>Program</code> node.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> ast = {
+    type: <span class="hljs-string">'Program'</span>,
+    body: []
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>And we’re going to kickstart our <code>walk</code> function, pushing nodes to our
+<code>ast.body</code> array.</p>
+<p>The reason we are doing this inside a loop is because our program can have
+<code>CallExpressions</code> after one another instead of being nested.</p>
+<p>  (add 2 2)
+  (subtract 4 2)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">while</span> (current &lt; tokens.length) {
+    ast.body.push(walk());
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>At the end of our parser we’ll return the AST.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span> ast;
+}
+
+<span class="hljs-comment">/**
+ * ============================================================================
+ *                                 ⌒(❀&gt;◞౪◟&lt;❀)⌒
+ *                               THE TRAVERSER!!!
+ * ============================================================================
+ */</span>
+
+<span class="hljs-comment">/**
+ * So now we have our AST, and we want to be able to visit different nodes with
+ * a visitor. We need to be able to call the methods on the visitor whenever we
+ * encounter a node with a matching type.
+ *
+ *   traverse(ast, {
+ *     Program(node, parent) {
+ *       // ...
+ *     },
+ *
+ *     CallExpression(node, parent) {
+ *       // ...
+ *     },
+ *
+ *     NumberLiteral(node, parent) {
+ *       // ...
+ *     }
+ *   });
+ */</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>So we define a traverser function which accepts an AST and a
+visitor. Inside we’re going to define two functions…</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">traverser</span>(<span class="hljs-params">ast, visitor</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p>A <code>traverseArray</code> function that will allow us to iterate over an array and
+call the next function that we will define: <code>traverseNode</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">traverseArray</span>(<span class="hljs-params">array, parent</span>) </span>{
+    array.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">child</span>) </span>{
+      traverseNode(child, parent);
+    });
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p><code>traverseNode</code> will accept a <code>node</code> and its <code>parent</code> node. So that it can
+pass both to our visitor methods.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">traverseNode</span>(<span class="hljs-params">node, parent</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>We start by testing for the existence of a method on the visitor with a
+matching <code>type</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> method = visitor[node.type];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p>If it exists we’ll call it with the <code>node</code> and its <code>parent</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (method) {
+      method(node, parent);
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>Next we are going to split things up by the current node type.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">switch</span> (node.type) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p>We’ll start with our top level <code>Program</code>. Since Program nodes have a
+property named body that has an array of nodes, we will call
+<code>traverseArray</code> to traverse down into them.</p>
+<p>(Remember that <code>traverseArray</code> will in turn call <code>traverseNode</code> so  we
+are causing the tree to be traversed recursively)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">case</span> <span class="hljs-string">'Program'</span>:
+        traverseArray(node.body, node);
+        <span class="hljs-keyword">break</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p>Next we do the same with <code>CallExpressions</code> and traverse their <code>params</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">case</span> <span class="hljs-string">'CallExpression'</span>:
+        traverseArray(node.params, node);
+        <span class="hljs-keyword">break</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p>In the case of <code>NumberLiterals</code> we don’t have any child nodes to visit,
+so we’ll just break.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">case</span> <span class="hljs-string">'NumberLiteral'</span>:
+        <span class="hljs-keyword">break</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>And again, if we haven’t recognized the node type then we’ll throw an
+error.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">default</span>:
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(node.type);
+    }
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>Finally we kickstart the traverser by calling <code>traverseNode</code> with our ast
+with no <code>parent</code> because the top level of the AST doesn’t have a parent.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  traverseNode(ast, <span class="hljs-literal">null</span>);
+}
+
+<span class="hljs-comment">/**
+ * ============================================================================
+ *                                   ⁽(◍˃̵͈̑ᴗ˂̵͈̑)⁽
+ *                              THE TRANSFORMER!!!
+ * ============================================================================
+ */</span>
+
+<span class="hljs-comment">/**
+ * Next up, the transformer. Our transformer is going to take the AST that we
+ * have built and pass it to our traverser function with a visitor and will
+ * create a new ast.
+ *
+ * ----------------------------------------------------------------------------
+ *   Original AST                     |   Transformed AST
+ * ----------------------------------------------------------------------------
+ *   {                                |   {
+ *     type: 'Program',               |     type: 'Program',
+ *     body: [{                       |     body: [{
+ *       type: 'CallExpression',      |       type: 'ExpressionStatement',
+ *       name: 'add',                 |       expression: {
+ *       params: [{                   |         type: 'CallExpression',
+ *         type: 'NumberLiteral',     |         callee: {
+ *         value: '2'                 |           type: 'Identifier',
+ *       }, {                         |           name: 'add'
+ *         type: 'CallExpression',    |         },
+ *         name: 'subtract',          |         arguments: [{
+ *         params: [{                 |           type: 'NumberLiteral',
+ *           type: 'NumberLiteral',   |           value: '2'
+ *           value: '4'               |         }, {
+ *         }, {                       |           type: 'CallExpression',
+ *           type: 'NumberLiteral',   |           callee: {
+ *           value: '2'               |             type: 'Identifier',
+ *         }]                         |             name: 'subtract'
+ *       }]                           |           },
+ *     }]                             |           arguments: [{
+ *   }                                |             type: 'NumberLiteral',
+ *                                    |             value: '4'
+ * ---------------------------------- |           }, {
+ *                                    |             type: 'NumberLiteral',
+ *                                    |             value: '2'
+ *                                    |           }]
+ *  (sorry the other one is longer.)  |         }]
+ *                                    |       }
+ *                                    |     }]
+ *                                    |   }
+ * ----------------------------------------------------------------------------
+ */</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>So we have our transformer function which will accept the lisp ast.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">transformer</span>(<span class="hljs-params">ast</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>We’ll create a <code>newAst</code> which like our previous AST will have a program
+node.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> newAst = {
+    type: <span class="hljs-string">'Program'</span>,
+    body: []
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <p>Next I’m going to cheat a little and create a bit of a hack. We’re going to
+use a property named <code>context</code> on our parent nodes that we’re going to push
+nodes to their parent’s <code>context</code>. Normally you would have a better
+abstraction than this, but for our purposes this keeps things simple.</p>
+<p>Just take note that the context is a reference <em>from</em> the old ast <em>to</em> the
+new ast.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  ast._context = newAst.body;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-57">&#182;</a>
+              </div>
+              <p>We’ll start by calling the traverser function with our ast and a visitor.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  traverser(ast, {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              <p>The first visitor method accepts <code>NumberLiterals</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    NumberLiteral: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">node, parent</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <p>We’ll create a new node also named <code>NumberLiteral</code> that we will push to
+the parent context.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      parent._context.push({
+        type: <span class="hljs-string">'NumberLiteral'</span>,
+        value: node.value
+      });
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
+              <p>Next up, <code>CallExpressions</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    CallExpression: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">node, parent</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-61">&#182;</a>
+              </div>
+              <p>We start creating a new node <code>CallExpression</code> with a nested
+<code>Identifier</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> expression = {
+        type: <span class="hljs-string">'CallExpression'</span>,
+        callee: {
+          type: <span class="hljs-string">'Identifier'</span>,
+          name: node.name
+        },
+        <span class="hljs-built_in">arguments</span>: []
+      };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-62">&#182;</a>
+              </div>
+              <p>Next we’re going to define a new context on the original
+<code>CallExpression</code> node that will reference the <code>expression</code>‘s arguments
+so that we can push arguments.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      node._context = expression.arguments;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-63">&#182;</a>
+              </div>
+              <p>Then we’re going to check if the parent node is a <code>CallExpression</code>.
+If it is not…</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (parent.type !== <span class="hljs-string">'CallExpression'</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-64">&#182;</a>
+              </div>
+              <p>We’re going to wrap our <code>CallExpression</code> node with an
+<code>ExpressionStatement</code>. We do this because the top level
+<code>CallExpressions</code> in JavaScript are actually statements.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        expression = {
+          type: <span class="hljs-string">'ExpressionStatement'</span>,
+          expression: expression
+        };
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-65">&#182;</a>
+              </div>
+              <p>Last, we push our (possibly wrapped) <code>CallExpression</code> to the <code>parent</code>‘s
+<code>context</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      parent._context.push(expression);
+    }
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-66">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-66">&#182;</a>
+              </div>
+              <p>At the end of our transformer function we’ll return the new ast that we
+just created.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span> newAst;
+}
+
+<span class="hljs-comment">/**
+ * ============================================================================
+ *                               ヾ（〃＾∇＾）ﾉ♪
+ *                            THE CODE GENERATOR!!!!
+ * ============================================================================
+ */</span>
+
+<span class="hljs-comment">/**
+ * Now let's move onto our last phase: The Code Generator.
+ *
+ * Our code generator is going to recursively call itself to print each node in
+ * the tree into one giant string.
+ */</span>
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">codeGenerator</span>(<span class="hljs-params">node</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-67">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-67">&#182;</a>
+              </div>
+              <p>We’ll break things down by the <code>type</code> of the <code>node</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">switch</span> (node.type) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-68">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-68">&#182;</a>
+              </div>
+              <p>If we have a <code>Program</code> node. We will map through each node in the <code>body</code>
+and run them through the code generator and join them with a newline.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">case</span> <span class="hljs-string">'Program'</span>:
+      <span class="hljs-keyword">return</span> node.body.map(codeGenerator)
+        .join(<span class="hljs-string">'\n'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-69">&#182;</a>
+              </div>
+              <p>For <code>ExpressionStatements</code> we’ll call the code generator on the nested
+expression and we’ll add a semicolon…</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">case</span> <span class="hljs-string">'ExpressionStatement'</span>:
+      <span class="hljs-keyword">return</span> (
+        codeGenerator(node.expression) +
+        <span class="hljs-string">';'</span> <span class="hljs-comment">// &lt;&lt; (...because we like to code the *correct* way)</span>
+      );</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-70">&#182;</a>
+              </div>
+              <p>For <code>CallExpressions</code> we will print the <code>callee</code>, add an open
+parenthesis, we’ll map through each node in the <code>arguments</code> array and run
+them through the code generator, joining them with a comma, and then
+we’ll add a closing parenthesis.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">case</span> <span class="hljs-string">'CallExpression'</span>:
+      <span class="hljs-keyword">return</span> (
+        codeGenerator(node.callee) +
+        <span class="hljs-string">'('</span> +
+        node.arguments.map(codeGenerator)
+          .join(<span class="hljs-string">', '</span>) +
+        <span class="hljs-string">')'</span>
+      );</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-71">&#182;</a>
+              </div>
+              <p>For <code>Identifiers</code> we’ll just return the <code>node</code>‘s name.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">case</span> <span class="hljs-string">'Identifier'</span>:
+      <span class="hljs-keyword">return</span> node.name;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-72">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-72">&#182;</a>
+              </div>
+              <p>For <code>NumberLiterals</code> we’ll just return the <code>node</code>‘s value.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">case</span> <span class="hljs-string">'NumberLiteral'</span>:
+      <span class="hljs-keyword">return</span> node.value;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-73">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-73">&#182;</a>
+              </div>
+              <p>And if we haven’t recognized the node, we’ll throw an error.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">default</span>:
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(node.type);
+  }
+}
+
+<span class="hljs-comment">/**
+ * ============================================================================
+ *                                  (۶* ‘ヮ’)۶”
+ *                         !!!!!!!!THE COMPILER!!!!!!!!
+ * ============================================================================
+ */</span>
+
+<span class="hljs-comment">/**
+ * FINALLY! We'll create our `compiler` function. Here we will link together
+ * every part of the pipeline.
+ *
+ *   1. input  =&gt; tokenizer   =&gt; tokens
+ *   2. tokens =&gt; parser      =&gt; ast
+ *   3. ast    =&gt; transformer =&gt; newAst
+ *   4. newAst =&gt; generator   =&gt; output
+ */</span>
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">compiler</span>(<span class="hljs-params">input</span>) </span>{
+  <span class="hljs-keyword">var</span> tokens = tokenizer(input);
+  <span class="hljs-keyword">var</span> ast    = parser(tokens);
+  <span class="hljs-keyword">var</span> newAst = transformer(ast);
+  <span class="hljs-keyword">var</span> output = codeGenerator(newAst);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-74">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-74">&#182;</a>
+              </div>
+              <p>and simply return the output!</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span> output;
+}
+
+<span class="hljs-comment">/**
+ * ============================================================================
+ *                                   (๑˃̵ᴗ˂̵)و
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!YOU MADE IT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * ============================================================================
+ */</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-75">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-75">&#182;</a>
+              </div>
+              <p>Now I’m just exporting everything…</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">module</span>.exports = {
+  tokenizer: tokenizer,
+  parser: parser,
+  transformer: transformer,
+  codeGenerator: codeGenerator,
+  compiler: compiler
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
